@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "baseUrl": "frontend/source",
+    "experimentalDecorators": true
+  },
+  "include": ["frontend/source"],
+  "no-unused-variable": true
+}
