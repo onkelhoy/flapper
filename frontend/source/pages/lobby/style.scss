@@ -1,0 +1,31 @@
+.lobby-container {
+  background-color: orange;
+  
+  .grid {
+    position: relative;
+    display: grid;
+    width: 80%;
+    left: 10%;
+    height: 100%;
+    padding: 40px;
+
+    // grid-template-areas: 
+    //   "list info";
+
+    // grid-template-columns: 260px 420px;
+    // grid-template-rows: auto;
+    // grid-column-gap: 3em;
+    
+    // .friendList {
+    //   grid-area: list;
+    // }
+  
+    // .info {
+    //   grid-area: info;
+    // }
+    
+    display: flex;
+    justify-content: center;
+  }
+
+}

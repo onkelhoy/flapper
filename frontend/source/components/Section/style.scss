@@ -1,0 +1,31 @@
+.screen-section {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
+  transition: left 300ms ease-out;
+
+  
+}
+
+// WTF why is &.left selectors not working!?
+.screen-section.hidden {
+  left: 100%;
+}
+.screen-section.left {
+  left: -100%;
+}
+.screen-section.right {
+  background-color: orange;
+  left: 100%;
+
+  p {
+    color: red;
+  }
+}
+
+body {
+  overflow: hidden;
+}

@@ -15,12 +15,12 @@ module.exports = {
         options: { presets: ['@babel/env'] },
       },
       {
-        test: /\.s?css/,
-        use: ['style-loader', 'sass-loader', 'node-sass', 'css-loader']
+        test: /\.(s*)css$/,
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
     ],
   },
-  resolve: { extensions: ['*', '.js', '.jsx'] },
+  resolve: { extensions: ['*', '.js', '.jsx', '.scss'], },
   output: {
     path: path.resolve('./frontend/bundle'),
     publicPath: '/bundle',
@@ -30,7 +30,9 @@ module.exports = {
     contentBase: path.join(__dirname, 'public/'),
     port: process.env.FRONTEND_SERVER_PORT,
     publicPath: `http://localhost:${process.env.FRONTEND_SERVER_PORT}/bundle`,
-    hotOnly: true,
+
+    historyApiFallback: true,
+    hot: true,
     proxy: {
       '/api': {
         target: `http://[::1]:8080`,

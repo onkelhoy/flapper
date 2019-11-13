@@ -4,13 +4,10 @@ const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 mongoose.Promise = Promise;
 
-const validateEmail = function(email) {
-  const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  return re.test(email)
-};
+const { safeTextValidation } = require('./validation');
 
 const UserSchema = new Schema({
-  email: { type: String, required: true, unique: true, validate: [validateEmailm, 'Provide a valid email!']},
+  username: { type: String, required: true, unique: true, validate: [safeTextValidation, 'Provide a username!']},
   password: { type: String, required: true, },
   friends: [{type: Schema.ObjectId, ref: 'user'}],
   scores: []

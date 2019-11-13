@@ -1,0 +1,39 @@
+@import '../../../utils/colors';
+
+.friendlist {
+  width: 260px;
+  margin-right: 35px;
+
+  .body {
+    background-color: $list;
+    padding: 15px;
+    height: 100%;
+    max-height: 500px;
+    text-align: center;
+
+    border-radius: 28px;
+    padding-bottom: 25px;
+
+    div.header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      text-align: left;
+      h2 {color: white !important; margin: 0; margin-right: 15px;}
+
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px white solid;
+    }
+
+    div.list {
+      text-align: initial;
+      height: 83%;
+      overflow-y: auto;
+    }
+  }
+
+  display: inline;
+  color: white;
+}

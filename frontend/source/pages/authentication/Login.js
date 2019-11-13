@@ -4,8 +4,11 @@ import { Button, Form, Header, Image, Segment, Message } from 'semantic-ui-react
 import { globalContext } from '../../App'; 
 
 const LoginForm = ({register}) => {
-  const { setAuthentication } = useContext(globalContext);
+  const { setAuthentication, setCurrentIndex } = useContext(globalContext);
 
+  const login = () => {
+    setCurrentIndex(1);
+  } 
   return (
     <>
       <Header as='h2' color='teal' textAlign='center'>
@@ -22,7 +25,7 @@ const LoginForm = ({register}) => {
             type='password'
           />
 
-          <Button color='teal' fluid size='large'>
+          <Button color='teal' fluid size='large' onClick={login}>
             Login
           </Button>
         </Segment>
