@@ -37,7 +37,8 @@ module.exports = {
       '/api': {
         target: `http://[::1]:8080`,
         changeOrigin: true,
-      }
+        ws: true, 
+      },
     }
   },
   plugins: [new webpack.HotModuleReplacementPlugin()],

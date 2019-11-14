@@ -5,15 +5,16 @@ const log = require('morgan');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const http = require('http');
 
 dotenv.config();
 const app = express();
 
-// init expressWS
-const expressWs = require('express-ws')(app);
-
 // local modules 
 const api = require('./api');
+const server = http.createServer(app);
+
+require('./websocket')(server);
 
 // database connection
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -36,4 +37,4 @@ app.get('/', (req, res) => res.sendfile('/index.html'));
 app.all('*', (req, res) => res.status(404).end());
 
 app.set('port', process.env.SERVER_PORT);
-app.listen(app.get('port'), () => console.log(`server is running on port ${app.get('port')}`));
+server.listen(app.get('port'), () => console.log(`server is running on port ${app.get('port')}`));

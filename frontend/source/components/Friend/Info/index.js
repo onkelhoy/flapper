@@ -7,10 +7,10 @@ import { globalContext } from '../../../App';
 const Info = (props) => {
   const { context } = props;
   const { user, } = useContext(globalContext);
-  const { selected, challenge } = useContext(context);
+  const { selected, websocket, friendshipStatus } = useContext(context);
 
   const { status, wins, games, target = {}, yourscore, friendscore, creator} = selected || {};
-  const { username, airplane = 1 } = target;
+  const { username, airplane = 1, _id } = target;
 
   const _wins = {
     you: wins,
@@ -27,6 +27,7 @@ const Info = (props) => {
   {
     _wins.you = games - wins;
   }
+
   return (
     <div className={`info ${selected !== null ? 'show' : 'hide'}`}>
       <Part name={user.username} className="you" airplane={user.airplane} wins={_wins.you} games={games} bestscore={yourscore} />
@@ -35,7 +36,14 @@ const Info = (props) => {
       
       <Part name={username} className="friend" airplane={airplane} wins={_wins.friend} games={games} bestscore={friendscore} />
 
-      <Button disabled={status !== 'online'} onClick={challenge} color="yellow" className="challange" icon="paper plane" content="Challenge" labelPosition="right" />
+      <Button 
+        disabled={friendshipStatus[_id] !== 'online'} 
+        color="yellow" 
+        className="challange" 
+        icon="paper plane" 
+        content="Challenge" 
+        labelPosition="right" 
+        onClick={() => websocket.send(JSON.stringify({type: 'game-request', id: user._id, target: _id}))}/>
     </div>
   );
 }

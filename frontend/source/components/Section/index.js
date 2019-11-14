@@ -21,9 +21,9 @@ const Section = (props) => {
 
   return (
     <section className={`screen-section ${className} ${movement}`}>
-      {children}
+      {currentIndex === index && children}
     </section>
-  )
+  );
 }
 
 export default Section;

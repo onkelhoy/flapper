@@ -43,6 +43,20 @@ router.post('/add', async (req, res) => {
   })
 });
 
+router.post('/accept/:id', async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    FriendModel.findOneAndUpdate({_id: ObjectId(id)}, { $set: {status: 'offline'}}, {new: true}, (err, doc) => {
+      if (err) res.status(500).json({error: true});
+      else res.status(200).json({success: true});
+    });
+  }
+  catch (e) {
+    res.status(500).json({error: true});
+  } 
+});
+
 router.post('/:userid', async (req, res) => {
   console.log('getting friends')
   const { userid } = req.params;
@@ -55,6 +69,6 @@ router.post('/:userid', async (req, res) => {
     console.log(e);
     res.status(500).json({error: true});
   }
-})
+});
 
 module.exports = router;

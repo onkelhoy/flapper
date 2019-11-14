@@ -17,6 +17,4 @@ router.post('/auth', (req, res) => res.status(200).json({success: true}));
 
 router.use('/friend', require('./friend'));
 
-router.use('/ws', require('./websocket'))
-
 module.exports = router;

@@ -2,14 +2,27 @@ import React, { useContext, } from 'react';
 import { List, Button, Header, Image } from 'semantic-ui-react';
 import './style.scss';
 import { globalContext } from '../../../App';
+import { request } from '../../../utils';
 
 const {Item, Content} = List;
 const FirendList = (props) => {
   const { user } = useContext(globalContext);
-  const { view, friends, setOpenSearch } = useContext(props.context);
+  const { view, friends, setFriends, websocket, setOpenSearch, friendshipStatus } = useContext(props.context);
 
-  const accept = (friend) => {
-    console.log('accept friend', friend);
+  const accept = async (friendship) => {
+    request('/friend/accept/'+friendship._id).then((res) => {
+      if (res.error) console.error('oh wel..');
+      else {
+        const updatedFriends = [...friends];
+        const t = updatedFriends.find(f => f._id === friendship._id);
+        if (t) {
+          t.status = 'offline';
+          setFriends(updatedFriends);
+
+          websocket.send(JSON.stringify({type: 'online', id: friendship._id}));
+        }
+      }
+    })
   }
   const items = friends.map((friend, index) => {
     let text = ':('; //offline
@@ -37,6 +50,7 @@ const FirendList = (props) => {
     const target = friend.friends.find(f => f._id !== user._id);
     
     friend.target = target;
+    if (friendshipStatus[friend.target._id]) status = friendshipStatus[friend.target._id];
 
     return (
       <Item key={index}>
