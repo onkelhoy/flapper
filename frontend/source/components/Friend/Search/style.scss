@@ -1,0 +1,15 @@
+.search .result {
+  display: grid !important;
+  grid-template-columns: 50px 1fr;
+  
+  .image {
+    width: 100% !important;
+
+    img { width: 100% !important;}
+  }
+
+  .title {
+    text-align: center;
+    padding-top: 10px;
+  }
+}

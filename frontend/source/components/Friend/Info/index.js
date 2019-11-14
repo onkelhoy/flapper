@@ -2,22 +2,40 @@ import React, {useContext}  from 'react';
 import { Image, Header, Button } from 'semantic-ui-react';
 
 import './style.scss';
+import { globalContext } from '../../../App';
 
 const Info = (props) => {
   const { context } = props;
-
+  const { user, } = useContext(globalContext);
   const { selected, challenge } = useContext(context);
 
-  const { wins, games, airplane = 1, name, yourscore, friendscore} = selected || {};
+  const { status, wins, games, target = {}, yourscore, friendscore, creator} = selected || {};
+  const { username, airplane = 1 } = target;
+
+  const _wins = {
+    you: wins,
+    friend: wins,
+  };
+
+  if (!user) return null;
+
+  if (creator === user._id)
+  {
+    _wins.friend = games - wins;
+  }
+  else 
+  {
+    _wins.you = games - wins;
+  }
   return (
     <div className={`info ${selected !== null ? 'show' : 'hide'}`}>
-      <Part name="Henry" className="you" airplane="1" wins={games - wins} games={games} bestscore={yourscore} />
+      <Part name={user.username} className="you" airplane={user.airplane} wins={_wins.you} games={games} bestscore={yourscore} />
       
       <Header className="vs" as='h1'>VS</Header>
       
-      <Part name={name} className="friend" airplane={airplane} wins={wins} games={games} bestscore={friendscore} />
+      <Part name={username} className="friend" airplane={airplane} wins={_wins.friend} games={games} bestscore={friendscore} />
 
-      <Button onClick={challenge} color="yellow" className="challange" icon="paper plane" content="Challenge" labelPosition="right" />
+      <Button disabled={status !== 'online'} onClick={challenge} color="yellow" className="challange" icon="paper plane" content="Challenge" labelPosition="right" />
     </div>
   );
 }

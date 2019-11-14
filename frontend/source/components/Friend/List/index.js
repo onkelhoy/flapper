@@ -1,11 +1,12 @@
 import React, { useContext, } from 'react';
 import { List, Button, Header, Image } from 'semantic-ui-react';
 import './style.scss';
+import { globalContext } from '../../../App';
 
 const {Item, Content} = List;
 const FirendList = (props) => {
-  const {context} = props;
-  const { view, friends, } = useContext(context);
+  const { user } = useContext(globalContext);
+  const { view, friends, setOpenSearch } = useContext(props.context);
 
   const accept = (friend) => {
     console.log('accept friend', friend);
@@ -28,10 +29,15 @@ const FirendList = (props) => {
     }
 
     let status = friend.status;
-    if (status === 'accept') 
+    if (status === 'pending' && friend.creator !== user._id) 
     {
-      status = <Button color="blue" size="mini" compact onClick={() => accept(friend)}>{status}</Button>
+      status = <Button color="blue" size="mini" compact onClick={() => accept(friend)}>accept</Button>
     }
+
+    const target = friend.friends.find(f => f._id !== user._id);
+    
+    friend.target = target;
+
     return (
       <Item key={index}>
         <Content floated='right'>
@@ -40,8 +46,8 @@ const FirendList = (props) => {
           <Button circular size="tiny" icon="paper plane" compact positive onClick={() => view(friend)}/>
         </Content>
         <Content>
-          <Image src={`/content/airplane(${friend.airplane}).svg`} avatar/>
-          <span>{friend.name}</span>
+          <Image src={`/content/airplane(${target.airplane}).svg`} avatar/>
+          <span>{target.username}</span>
         </Content>
       </Item>
     )
@@ -53,7 +59,7 @@ const FirendList = (props) => {
 
         <div className="header">
           <Header as="h2" textAlign="center">Friends</Header>
-          <Button className="add" icon="plus" color="yellow" circular/>
+          <Button onClick={() => setOpenSearch(true)} className="add" icon="plus" color="yellow" circular/>
         </div>
         
         <List divided verticalAlign='middle'>

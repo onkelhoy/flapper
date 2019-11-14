@@ -6,16 +6,22 @@ const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-// local modules 
-const api = require('./api');
-
 dotenv.config();
 const app = express();
+
+// init expressWS
+const expressWs = require('express-ws')(app);
+
+// local modules 
+const api = require('./api');
 
 // database connection
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', () => {
+  console.log('\x1b[36m%s\x1b[0m', 'connected to database')
+})
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));

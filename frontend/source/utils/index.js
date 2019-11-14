@@ -1,9 +1,9 @@
 import path from 'path';
 
-export const request = async (url, config) => {
-  const token = window.localStorage.getItem('token');
+export const request = async (url, config = {}) => {
+  const token = window.localStorage.getItem('flapper-token');
 
-  const { method = 'get', body = {}, ...rest} = config;
+  const { method = 'post', body = {}, ...rest} = config;
   try {
     const conf = {
       method,
@@ -14,11 +14,12 @@ export const request = async (url, config) => {
         'Content-Type': 'application/json',
       },
 
-      body: JSON.stringify(body),
+      body: JSON.stringify({...body, token }),
       ...rest
     };
 
     if (method === 'get') delete conf.body;
+    else console.log(conf.body);
 
     const res = await fetch(path.join('/api', url), conf);
     const json = await res.json();

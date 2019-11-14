@@ -5,15 +5,13 @@ import { request } from '../../utils';
 
 const RegisterForm = ({login}) => {
   const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   const [rePass, setRePass] = useState('');
-  const [email, setEmail] = useState('');
-
-
 
   const register = async () => {
     const result = await request('/register', {
       method: 'post',
-      body: {email, password,}
+      body: {username, password,}
     });
 
     if (result.error) {
@@ -32,7 +30,13 @@ const RegisterForm = ({login}) => {
       </Header>
       <Form size='large'>
         <Segment stacked>
-          <Form.Input required fluid icon='user' iconPosition='left' placeholder='E-mail address' />
+          <Form.Input 
+            required 
+            fluid 
+            icon='user' 
+            iconPosition='left' 
+            onChange={(e, {value}) => setUsername(value)}
+            placeholder='Username' />
           <Form.Input
             required
             fluid

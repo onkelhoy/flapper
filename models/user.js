@@ -9,19 +9,20 @@ const { safeTextValidation } = require('./validation');
 const UserSchema = new Schema({
   username: { type: String, required: true, unique: true, validate: [safeTextValidation, 'Provide a username!']},
   password: { type: String, required: true, },
-  friends: [{type: Schema.ObjectId, ref: 'user'}],
-  scores: []
+  airplane: { type: Number },
 });
 
-UserSchema.pre('save', (next) => {
+UserSchema.pre('save', function (next) {
   const user = this;
-  bcrypt.genSalt((err, salt) => {
+  
+  bcrypt.genSalt(10, (err, salt) => {
     if (err) return next(err);
 
     bcrypt.hash(user.password, salt, (err, hash) => {
       if (err) return next(err);
 
       user.password = hash;
+      user.airplane = ~~(Math.random() * 5) + 1;
       next();
     });
   });
@@ -31,5 +32,5 @@ UserSchema.methods.comparePassword = function (cpass, callback) {
   bcrypt.compare(cpass, this.password, callback);
 };
 
-module.exports = mongoose.model('user', UserSchema);
+module.exports = mongoose.model('users', UserSchema);
 

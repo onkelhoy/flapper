@@ -1,13 +1,31 @@
-import React, { useContext, } from 'react';
+import React, { useContext, useState, } from 'react';
 import { Button, Form, Header, Image, Segment, Message } from 'semantic-ui-react'
+import { request } from '../../utils';
 
 import { globalContext } from '../../App'; 
 
 const LoginForm = ({register}) => {
-  const { setAuthentication, setCurrentIndex } = useContext(globalContext);
+  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const { setCurrentIndex, setUser, } = useContext(globalContext);
 
-  const login = () => {
-    setCurrentIndex(1);
+  const login = async () => {
+
+    const result = await request('/login', {
+      method: 'post',
+      body: {username, password,}
+    });
+
+    if (result.error) {
+      console.error(result.error);
+      // show error
+    }
+    else {
+      window.localStorage.setItem('flapper-token', result.token);
+      window.localStorage.setItem('flapper-user', JSON.stringify(result.user));
+      setUser(result.user);
+      setCurrentIndex(1);
+    }
   } 
   return (
     <>
@@ -16,12 +34,17 @@ const LoginForm = ({register}) => {
       </Header>
       <Form size='large'>
         <Segment stacked>
-          <Form.Input fluid icon='user' iconPosition='left' placeholder='E-mail address' />
+          <Form.Input 
+            fluid icon='user' 
+            iconPosition='left' 
+            onChange={(e, {value}) => setUsername(value)}
+            placeholder='Username'/>
           <Form.Input
             fluid
             icon='lock'
             iconPosition='left'
             placeholder='Password'
+            onChange={(e, {value}) => setPassword(value)}
             type='password'
           />
 

@@ -4,25 +4,50 @@ import {hot} from 'react-hot-loader';
 import Auth from './pages/authentication';
 import Section from './components/Section';
 import Lobby from './pages/lobby';
+import { request } from './utils';
+import { initWebsocket } from './utils/websocket';
 
 const globalContext = createContext();
 
 const App = (props) => {
-  const [authenticated, setAuthenticated] = useState(null);
+  const [user, setUser] = useState(null);
+  const [websocket, setWebsocket] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0); // using this as section swapper
 
   useEffect(() => {
-    if (!window.localStorage.getItem('flapper-token')) {
+    const token = window.localStorage.getItem('flapper-token')
+    if (!token) {
       // we need to authenticate !! 
 
     } else {
-
+      // now we need to try authenticate 
+      request('/auth', {
+        method: 'post',
+        body: { token }
+      }).then((res) => {
+        if (res.error) window.localStorage.setItem('flapper-token', null);
+        else {
+          setUser(JSON.parse(window.localStorage.getItem('flapper-user')))
+          setCurrentIndex(1);
+        }
+      }).catch(err => {
+        window.localStorage.setItem('flapper-token', null);
+      });
     } 
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      const websocket = new window.WebSocket('ws://localhost:8080/api/ws');
+      initWebsocket(websocket);
+      setWebsocket(websocket);
+    } 
+  }, [user]);
+
   const provides = {
-    authenticated,
-    setAuthenticated,
+    user,
+    websocket,
+    setUser,
     currentIndex,
     setCurrentIndex,
   };
